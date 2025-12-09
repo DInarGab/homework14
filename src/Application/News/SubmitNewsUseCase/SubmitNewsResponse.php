@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\News\UseCase;
+namespace App\Application\News\SubmitNewsUseCase;
 
 class SubmitNewsResponse
 {

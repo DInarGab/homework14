@@ -22,7 +22,7 @@ class GenerateReportUseCase
     }
     public function __invoke(GenerateReportRequest $request): GenerateReportResponse
     {
-        $news = $this->newsRepository->findByIds($request->newsId);
+        $news = $this->newsRepository->getByIds($request->newsId);
         //Генерируем верстку файла (string? или отправлять Value Object в фабрику? или как лучше вообще это дело делать?)
         $htmlContent = $this->reportViewGenerator->generate($news);
         //Сохраняем файл на диск

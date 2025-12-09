@@ -8,14 +8,13 @@ use App\Domain\News\Entity\News;
 
 interface NewsRepositoryInterface
 {
-    public function findById(int $id): ?News;
 
-    public function findByIds(array $ids): array;
+    public function getByIds(array $ids): array;
 
     /*
      * @return array<News>
      */
-    public function findAll(): array;
+    public function getAll(): array;
 
     public function save(News $news): void;
 

@@ -7,10 +7,8 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Embeddable;
 use InvalidArgumentException;
 
-#[Embeddable]
 class Title
 {
-    #[Column(type: 'string', nullable: false)]
     private string $title;
     public function __construct(string $title)
     {

@@ -15,25 +15,15 @@ class NewsRepository extends ServiceEntityRepository implements NewsRepositoryIn
         parent::__construct($registry, News::class);
     }
 
-    public function findById(int $id): ?News
-    {
-        return $this->findById($id);
-    }
-
-    public function findByIds(array $ids): array
+    public function getByIds(array $ids): array
     {
 
         return $this->findBy(['id' => $ids]);
     }
 
-    public function findAll(): array
+    public function getAll(): array
     {
-        $qb = $this->createQueryBuilder('news')
-            ->select('news')
-            ->from('News', 'news')
-            ->orderBy('news.id', 'ASC');
-        $query = $qb->getQuery();
-        return $query->getResult();
+        return [];
     }
 
     public function save(News $news): void

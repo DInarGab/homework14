@@ -16,13 +16,12 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         identity_generation_preferences:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
-        auto_mapping: true
         mappings:
             App:
-                type: attribute
+                type: xml
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Domain/News/Entity/'
-                prefix: 'App\'
+                dir: '%kernel.project_dir%/config/doctrine_mappings'
+                prefix: 'App\Domain'
                 alias: App
         controller_resolver:
             auto_mapping: false

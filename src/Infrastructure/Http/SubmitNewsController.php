@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Http;
 
-use App\Application\News\UseCase\SubmitNewsRequest;
-use App\Application\News\UseCase\SubmitNewsUseCase;
+use App\Application\News\SubmitNewsUseCase\SubmitNewsRequest;
+use App\Application\News\SubmitNewsUseCase\SubmitNewsUseCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -22,7 +22,7 @@ class SubmitNewsController extends AbstractController
      * @param SubmitNewsRequest $request
      * @return JsonResponse
      */
-    #[Route('/api/news', name: 'add_news', methods: ['POST'])]
+    #[Route('/api/news/', name: 'add_news', methods: ['POST'])]
     public function __invoke(
         #[MapRequestPayload] SubmitNewsRequest $request
     ): JsonResponse
@@ -31,7 +31,7 @@ class SubmitNewsController extends AbstractController
             $response = ($this->submitNewsUseCase)($request);
             return $this->json($response, 201);
         } catch (\Exception $exception) {
-            return $this->json([$exception->getMessage()], 400);
+            return $this->json(["message" => $exception->getMessage()], 400);
         }
     }
 }
