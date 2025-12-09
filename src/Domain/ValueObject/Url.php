@@ -4,11 +4,12 @@ namespace App\Domain\ValueObject;
 
 
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Embeddable;
 use InvalidArgumentException;
 
+#[Embeddable]
 class Url
 {
-
     #[Column(type: 'string', nullable: false)]
     private string $url;
 

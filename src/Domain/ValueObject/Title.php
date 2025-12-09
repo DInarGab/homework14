@@ -4,15 +4,17 @@ namespace App\Domain\ValueObject;
 
 
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Embeddable;
 use InvalidArgumentException;
 
+#[Embeddable]
 class Title
 {
     #[Column(type: 'string', nullable: false)]
     private string $title;
     public function __construct(string $title)
     {
-        $this->assertValidContent($this->title);
+        $this->assertValidContent($title);
         $this->title = $title;
     }
 

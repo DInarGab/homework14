@@ -17,26 +17,13 @@ class NewsRepository extends ServiceEntityRepository implements NewsRepositoryIn
 
     public function findById(int $id): ?News
     {
-        $qb = $this->createQueryBuilder('news')
-            ->select('news')
-            ->from('News', 'news')
-            ->where('news.id = :id')
-            ->setParameter('id', $id)
-            ->setMaxResults(1);
-        $query = $qb->getQuery();
-        return $query->getOneOrNullResult();
+        return $this->findById($id);
     }
 
     public function findByIds(array $ids): array
     {
-        $qb = $this->createQueryBuilder('news')
-            ->select('news')
-            ->from('News', 'news')
-            ->where('news.id IN (:ids)')
-            ->setParameter('ids', $ids);
-        $query = $qb->getQuery();
 
-        return $query->getResult();
+        return $this->findBy(['id' => $ids]);
     }
 
     public function findAll(): array

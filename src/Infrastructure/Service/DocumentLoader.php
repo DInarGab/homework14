@@ -7,19 +7,19 @@ use App\Application\News\Factory\NewsFactory;
 use App\Domain\News\Entity\News;
 use App\Domain\News\Entity\NewsSource;
 use App\Domain\Service\DocumentLoaderInterface;
-use GuzzleHttp\Client;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DocumentLoader implements DocumentLoaderInterface
 {
     public function __construct(
-        private readonly Client $client,
+        private readonly HttpClientInterface $client,
     )
     {
     }
     public function fetch(NewsSource $newsSource, NewsFactory $newsFactory): News
     {
-        $response = $this->client->get($newsSource->getUrl()->getValue());
-        $title = $this->extractTitle($response->getBody()->getContents());
+        $response = $this->client->request("GET", $newsSource->getUrl()->getValue());
+        $title = $this->extractTitle($response->getContent());
         $news = $newsFactory->create($title, $newsSource->getUrl()->getValue());
         return $news;
     }
@@ -31,7 +31,7 @@ class DocumentLoader implements DocumentLoaderInterface
      */
     private function extractTitle(string $html): string
     {
-        $dom = new DOMDocument();
+        $dom = new \DOMDocument();
         @$dom->loadHTML($html);
 
         $titleElements = $dom->getElementsByTagName('title');

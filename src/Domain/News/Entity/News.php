@@ -25,9 +25,9 @@ class News
     #[ORM\Embedded(class:Url::class)]
     private Url $url;
     #[ORM\Column(type: 'date')]
-    private \DateTimeImmutable $date;
+    private \DateTime $date;
 
-    public function __construct(Title $title, Url $url, \DateTimeImmutable $date = new \DateTimeImmutable())
+    public function __construct(Title $title, Url $url, \DateTime $date = new \DateTime())
     {
         $this->date = $date;
         $this->url = $url;

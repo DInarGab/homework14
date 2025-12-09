@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Welcome to Symfony!</title>
+</head>
+<body>
+<h1>Report</h1>
+
+<ul>
+    {% for newsItem in news  %}
+        <li><a href="{{ newsItem.url.value }}" target="_blank">{{ newsItem.title.value }}</a></li>
+    {% endfor %}
+</ul>
+</body>
+</html>

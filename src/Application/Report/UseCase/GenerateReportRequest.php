@@ -5,11 +5,10 @@ namespace App\Application\Report\UseCase;
 
 class GenerateReportRequest
 {
-    /**
-     * @param array<int> $newsId
-     */
-    public function __construct(public readonly array $newsId)
-    {
+    public readonly array $newsId;
 
+    public function __construct(string $newsId)
+    {
+        $this->newsId = explode(",", $newsId);
     }
 }

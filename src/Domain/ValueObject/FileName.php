@@ -9,7 +9,7 @@ class FileName
     private const FILE_PREFIX = "report_";
     public function __construct()
     {
-        $this->fileName = self::FILE_PREFIX . date("Y-m-d H:i:s");
+        $this->fileName = self::FILE_PREFIX . date("Y-m-d-H-i-s");
     }
 
     public function getValue(): string

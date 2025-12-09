@@ -29,7 +29,7 @@ class SubmitNewsUseCase
     {
         //Спарсить страницу новости
         $newsSource = $this->newsSourceFactory->create($newsRequest->url);
-        $news = $this->documentLoader->fetch($this->newsFactory, $newsSource);
+        $news = $this->documentLoader->fetch($newsSource, $this->newsFactory);
         // Сохранить новость в БД или на Диск.
         $this->newsRepository->save($news);
         // Вернуть результат

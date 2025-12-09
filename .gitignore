@@ -13,3 +13,4 @@
 /.idea/
 /.env
 /.env.dev
+/public/report

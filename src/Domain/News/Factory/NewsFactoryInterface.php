@@ -8,5 +8,5 @@ use App\Domain\News\Entity\News;
 
 interface NewsFactoryInterface
 {
-    public function create(string $title, string $url, string $date): News;
+    public function create(string $title, string $url): News;
 }
