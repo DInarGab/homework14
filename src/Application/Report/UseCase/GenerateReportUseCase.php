@@ -12,17 +12,21 @@ class GenerateReportUseCase
 {
 
     public function __construct(
-        private NewsRepositoryInterface $newsRepository,
-        private ReportRepositoryInterface $reportRepository,
-        private ReportFactoryInterface $reportFactory,
+        private NewsRepositoryInterface      $newsRepository,
+        private ReportRepositoryInterface    $reportRepository,
+        private ReportFactoryInterface       $reportFactory,
         private ReportViewGeneratorInterface $reportViewGenerator
     )
     {
 
     }
+
     public function __invoke(GenerateReportRequest $request): GenerateReportResponse
     {
         $news = $this->newsRepository->getByIds($request->newsId);
+        if (empty($news)) {
+            throw new \InvalidArgumentException('No News with supplied ids: ' . implode(',', $request->newsId));
+        }
         //Генерируем верстку файла (string? или отправлять Value Object в фабрику? или как лучше вообще это дело делать?)
         $htmlContent = $this->reportViewGenerator->generate($news);
         //Сохраняем файл на диск

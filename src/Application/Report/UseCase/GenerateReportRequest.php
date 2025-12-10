@@ -9,6 +9,6 @@ class GenerateReportRequest
 
     public function __construct(string $newsId)
     {
-        $this->newsId = explode(",", $newsId);
+        $this->newsId = empty($newsId) ? [] : explode(",", $newsId);
     }
 }

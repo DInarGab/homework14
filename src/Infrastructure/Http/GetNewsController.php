@@ -21,6 +21,6 @@ class GetNewsController extends AbstractController
     public function __invoke(): JsonResponse
     {
         $newsArray = ($this->useCase)();
-        return $this->json($newsArray->asArray(), 200);
+        return $this->json(["news" => $newsArray->asArray()], 200);
     }
 }

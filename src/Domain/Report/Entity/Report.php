@@ -9,9 +9,10 @@ use App\Domain\ValueObject\HtmlContent;
 class Report
 {
     private ?string $filePath = null;
+
     public function __construct(
         private readonly HtmlContent $content,
-        private readonly FileName $filename = new FileName(),
+        private readonly FileName    $filename = new FileName(),
     )
     {
 
