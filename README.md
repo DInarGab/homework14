@@ -64,6 +64,6 @@
 }
 ```
 
-[Пример отчета](./docs/example-report/report_2026-01-12-07-16-11.html)
+[Пример отчета](./docs/example-report/report_2026-01-12-07-16-11.html).
 
 
