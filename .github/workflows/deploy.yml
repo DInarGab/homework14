@@ -59,7 +59,14 @@ jobs:
                             -w /app \
                             composer install --no-dev --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
-                        docker compose exec -d phpnew php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --all-or-nothing
+                        echo "Trying migrations"
+                        cd $PROJECT_ROOT
+                        docker compose run --rm \
+                            -v $NEW_RELEASE_DIR:/opt/myapp \
+                            -w /opt/myapp \
+                            phpnew \
+                            php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --all-or-nothing
+
 
                         # Права на запись кеша для контенера
                         mkdir -p $NEW_RELEASE_DIR/var/cache $NEW_RELEASE_DIR/var/log
