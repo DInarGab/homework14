@@ -1,0 +1,78 @@
+on:
+    push:
+        branches: [ "master" ]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout Code
+                uses: actions/checkout@v3
+
+            -   name: Checkout Config Repo
+                uses: actions/checkout@v3
+                with:
+                    repository: DInarGab/media-settings
+                    token: ${{ secrets.CONFIG_REPO_TOKEN }}
+                    path: configs
+
+            -   name: Prepare Archive
+                run: |
+                    cp configs/.env.production .env
+                    rm -rf .git .github configs
+                    tar -czf deploy_package.tar.gz .
+
+            # 4. Отправка архива на сервер (appleboy/scp-action)
+            -   name: Copy files via SCP
+                uses: appleboy/scp-action@v1
+                with:
+                    host: ${{ secrets.SSH_HOST }}
+                    username: ${{ secrets.SSH_USER }}
+                    key: ${{ secrets.SSH_KEY }}
+                    source: "deploy_package.tar.gz"
+                    target: "/tmp/"
+
+            # 5. Магия на сервере (appleboy/ssh-action)
+            -   name: Execute Remote SSH Commands
+                uses: appleboy/ssh-action@v1.0.3
+                with:
+                    host: ${{ secrets.SSH_HOST }}
+                    username: ${{ secrets.SSH_USER }}
+                    key: ${{ secrets.SSH_KEY }}
+                    script: |
+                        PROJECT_ROOT="/opt/myapp"
+                        RELEASE_DATE=$(date +%Y%m%d%H%M%S)
+                        NEW_RELEASE_DIR="$PROJECT_ROOT/releases/$RELEASE_DATE"
+
+
+                        # папка релиза
+                        mkdir -p $NEW_RELEASE_DIR
+
+                        # Распаковка архива
+                        tar -xzf /tmp/deploy_package.tar.gz -C $NEW_RELEASE_DIR
+                        rm /tmp/deploy_package.tar.gz
+
+                        # composer install через отдельный образ
+                        docker run --rm \
+                            -v $NEW_RELEASE_DIR:/app \
+                            -w /app \
+                            composer install --no-dev --prefer-dist --optimize-autoloader --ignore-platform-reqs
+
+
+                        cp $NEW_RELEASE_DIR/docker-compose.yml $PROJECT_ROOT/docker-compose.yml
+
+                        # переключаем симлинк
+                        ln -sfn $NEW_RELEASE_DIR $PROJECT_ROOT/current
+
+                        cd $PROJECT_ROOT
+
+
+                        # Пересобираем контейнеры в фоне (если изменился Image) и перезапускаем
+                        docker compose up -d --build --remove-orphans
+
+
+                        # Удаляем старые релизы
+                        cd $PROJECT_ROOT/releases
+                        ls -t | tail -n +4 | xargs -I {} rm -rf {}
+
+                        echo "Deployment finished!"

@@ -1,0 +1,49 @@
+# в этом блоке мы описываем контейнеры, которые будут запускаться
+services:
+    postgres:
+        container_name: postgreshw14
+        image: 'postgres'
+        restart: always
+        shm_size: 4096MB
+        environment:
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+        #Для подключения снаружи
+        ports:
+            - '5432:5432'
+
+
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        image: hw12/nginx
+        container_name: nginxhw14
+        # проброс портов
+        ports:
+            - "80:80"
+        volumes:
+            - ../.:/data/mysite.local
+        depends_on:
+            - phpnew
+
+
+    phpnew:
+        # Если нет секции build, то система будет искать образ в репозиториях
+        build:
+            context: ./php
+            dockerfile: Dockerfile
+        image: hw12/php # имя будущего образа
+        container_name: phphw14 # имя контейнера после запуска
+        environment:
+            - APP_ENV=${APP_ENV}
+            - DB_HOST=${DB_HOST}
+            - DB_PORT=${DB_PORT}
+            - DB_DATABASE=${DB_DATABASE}
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+        volumes:
+            - ../.:/data/mysite.local
+        # мы можем создать для контейнеров внутреннюю сеть
+        depends_on:
+            - postgres
+

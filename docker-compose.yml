@@ -1,0 +1,54 @@
+# в этом блоке мы описываем контейнеры, которые будут запускаться
+services:
+    postgres:
+        image: 'postgres'
+        restart: always
+        environment:
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB={DB_DATABASE}
+            - POSTGRES_USER=${DB_USERNAME}
+        networks:
+            - default_network
+        volumes:
+            - ./postgres_data:/var/lib/postgresql/data
+
+    nginx:
+        build:
+            context: ./docker/nginx
+            dockerfile: Dockerfile
+        image: hw12/nginx
+        # проброс портов
+        ports:
+            - "80:80"
+        volumes:
+            - .:/data/mysite.local
+        depends_on:
+            - phpnew
+        networks:
+            - default_network
+
+
+    phpnew:
+        build:
+            context: ./docker/php
+            dockerfile: Dockerfile
+        image: hw12/php # имя будущего образа
+        container_name: phphw14 # имя контейнера после запуска
+        environment:
+            - DB_HOST=postgres
+            - DB_PORT=5432
+            - DB_DATABASE=${DB_DATABASE}
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DATABASE_URL="postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}?charset=utf8"
+        volumes:
+            - .:/data/mysite.local
+        # мы можем создать для контейнеров внутреннюю сеть
+        depends_on:
+            - postgres
+        networks:
+            - default_network
+
+networks:
+    default_network:
+        driver: bridge
