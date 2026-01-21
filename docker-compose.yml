@@ -10,18 +10,17 @@ services:
         networks:
             - default_network
         volumes:
-            - ./postgres_data:/var/lib/postgresql/data
+            - ./postgres_data:/var/lib/postgresql
 
     nginx:
         build:
             context: ./docker/nginx
             dockerfile: Dockerfile
         image: hw12/nginx
-        # проброс портов
         ports:
             - "80:80"
         volumes:
-            - .:/data/mysite.local
+            - .:/opt/myapp
         depends_on:
             - phpnew
         networks:
@@ -42,8 +41,7 @@ services:
             - DB_PASSWORD=${DB_PASSWORD}
             - DATABASE_URL="postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}?charset=utf8"
         volumes:
-            - .:/data/mysite.local
-        # мы можем создать для контейнеров внутреннюю сеть
+            - .:/opt/myapp
         depends_on:
             - postgres
         networks:
