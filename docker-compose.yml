@@ -1,12 +1,13 @@
 # в этом блоке мы описываем контейнеры, которые будут запускаться
 services:
     postgres:
-        image: 'postgres'
+        image: 'postgres:16'
         restart: always
         environment:
             - POSTGRES_PASSWORD=${DB_PASSWORD}
             - POSTGRES_DB={DB_DATABASE}
             - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_INITDB_ARGS='--encoding=UTF-8'
         networks:
             - default_network
         volumes:
