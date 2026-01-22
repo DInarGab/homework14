@@ -42,6 +42,7 @@ jobs:
                     key: ${{ secrets.SSH_KEY }}
                     script: |
                         PROJECT_ROOT="/opt/myapp"
+                        SHARED_DIR="$PROJECT_ROOT/shared"
                         RELEASE_DATE=$(date +%Y%m%d%H%M%S)
                         NEW_RELEASE_DIR="$PROJECT_ROOT/releases/$RELEASE_DATE"
 
@@ -64,6 +65,14 @@ jobs:
                             -w /app \
                             composer install --no-dev --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
+
+
+                         # Права на запись для отчетов
+                        rm -rf $NEW_RELEASE_DIR/public/reports
+                        mkdir -p $SHARED_DIR/public/reports
+                        sudo chmod -R 777 $SHARED_DIR/public/reports
+                        ln -sfn $SHARED_DIR/public/reports $NEW_RELEASE_DIR/public/reports
+
                         # миграция с использованием старого phpnew, но новых файлов
                         cd $PROJECT_ROOT
                         docker compose run --rm \
@@ -76,6 +85,7 @@ jobs:
                         # Права на запись кеша для контенера
                         mkdir -p $NEW_RELEASE_DIR/var/cache $NEW_RELEASE_DIR/var/log
                         sudo chmod -R 777 $NEW_RELEASE_DIR/var
+
 
                         cp $NEW_RELEASE_DIR/docker-compose.yml $PROJECT_ROOT/docker-compose.yml
 
@@ -92,6 +102,8 @@ jobs:
                         # Пересобираем контейнеры в фоне (если изменился Image) и перезапускаем
                         docker compose up -d --build --remove-orphans
 
+                        sleep 10
+
                         # Простой healthcheck
                         if curl --silent --fail --head http://localhost/api/news/; then
 
@@ -103,7 +115,7 @@ jobs:
                             ls -t | tail -n +4 | xargs -I {} rm -rf {}
 
                         else
-                            echo "Sited Down Rolling back"
+                            echo "Site is Down Rolling back"
 
                             if [ -z "$PREV_RELEASE_DIR" ]; then
                                 echo "Error no previoues releases"
