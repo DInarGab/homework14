@@ -20,7 +20,11 @@ class GetNewsController extends AbstractController
     #[Route('/api/news/', name: 'get_news', methods: ['GET'])]
     public function __invoke(): JsonResponse
     {
-        $newsArray = ($this->useCase)();
-        return $this->json(["news" => $newsArray->asArray()], 200);
+        try {
+            $newsArray = ($this->useCase)();
+            return $this->json(["news" => $newsArray->asArray()], 200);
+        } catch (\Exception $e) {
+            return $this->json(["error" => $e->getMessage()], 400);
+        }
     }
 }

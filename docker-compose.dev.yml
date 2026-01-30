@@ -1,0 +1,51 @@
+# в этом блоке мы описываем контейнеры, которые будут запускаться
+services:
+    postgres:
+        image: 'postgres:16'
+        restart: always
+        environment:
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_DATABASE}
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_INITDB_ARGS='--encoding=UTF-8'
+        networks:
+            - default_network
+        volumes:
+            - ./postgres_data:/var/lib/postgresql
+
+    nginx:
+        build:
+            context: ./docker/nginx-dev
+            dockerfile: Dockerfile
+        ports:
+            - "80:80"
+        volumes:
+            - .:/opt/myapp
+        depends_on:
+            - phpnew
+        networks:
+            - default_network
+
+
+    phpnew:
+        build:
+            context: ./docker/php
+            dockerfile: Dockerfile
+        image: hw12/php # имя будущего образа
+        environment:
+            - DB_HOST=postgres
+            - DB_PORT=5432
+            - DB_DATABASE=${DB_DATABASE}
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres:5432/${DB_DATABASE}?charset=utf8
+        volumes:
+            - .:/opt/myapp
+        depends_on:
+            - postgres
+        networks:
+            - default_network
+
+networks:
+    default_network:
+        driver: bridge

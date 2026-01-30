@@ -7,5 +7,5 @@ use App\Domain\Report\Entity\Report;
 
 interface ReportFactoryInterface
 {
-    public function create(string $content): Report;
+    public function create(string $filePath): Report;
 }

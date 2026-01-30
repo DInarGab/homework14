@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Service;
 
-use App\Domain\Service\ReportViewGeneratorInterface;
+use App\Application\Report\Service\ReportViewGeneratorInterface;
 use Twig\Environment;
 
 class TwigReportGenerator implements ReportViewGeneratorInterface

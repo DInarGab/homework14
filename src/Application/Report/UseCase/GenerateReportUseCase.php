@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Application\Report\UseCase;
 
+use App\Application\Report\Service\ReportContentStorageInterface;
+use App\Application\Report\Service\ReportViewGeneratorInterface;
 use App\Domain\News\Repository\NewsRepositoryInterface;
 use App\Domain\Report\Factory\ReportFactoryInterface;
 use App\Domain\Report\Repository\ReportRepositoryInterface;
-use App\Domain\Service\ReportViewGeneratorInterface;
 
 class GenerateReportUseCase
 {
@@ -15,7 +16,8 @@ class GenerateReportUseCase
         private NewsRepositoryInterface      $newsRepository,
         private ReportRepositoryInterface    $reportRepository,
         private ReportFactoryInterface       $reportFactory,
-        private ReportViewGeneratorInterface $reportViewGenerator
+        private ReportViewGeneratorInterface $reportViewGenerator,
+        private ReportContentStorageInterface $reportContentStorage
     )
     {
 
@@ -23,14 +25,18 @@ class GenerateReportUseCase
 
     public function __invoke(GenerateReportRequest $request): GenerateReportResponse
     {
-        $news = $this->newsRepository->getByIds($request->newsId);
+        $news = $this->newsRepository->getByIds($request->newsIds);
         if (empty($news)) {
-            throw new \InvalidArgumentException('No News with supplied ids: ' . implode(',', $request->newsId));
+            throw new \InvalidArgumentException('No News with supplied ids: ' . implode(',', $request->newsIds));
         }
-        //Генерируем верстку файла (string? или отправлять Value Object в фабрику? или как лучше вообще это дело делать?)
+
+
         $htmlContent = $this->reportViewGenerator->generate($news);
-        //Сохраняем файл на диск
-        $report = $this->reportFactory->create($htmlContent);
+
+        $fileName = 'report_' . date('Y-m-d_H-i-s');
+        $filePath = $this->reportContentStorage->store($fileName, $htmlContent);
+        //Сохраняем ссылку на отчет в БД
+        $report = $this->reportFactory->create($filePath);
         $this->reportRepository->save($report);
         return new GenerateReportResponse(
             $report->getFilePath()

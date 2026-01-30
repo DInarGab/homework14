@@ -11,11 +11,9 @@ use App\Domain\ValueObject\HtmlContent;
 class ReportFactory implements ReportFactoryInterface
 {
 
-    public function create(string $content): Report
+
+    public function create(string $filePath): Report
     {
-        return new Report(
-            new HtmlContent($content),
-            new FileName()
-        );
+        return new Report($filePath);
     }
 }

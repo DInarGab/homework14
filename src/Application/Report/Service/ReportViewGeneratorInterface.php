@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Service;
+namespace App\Application\Report\Service;
 
 
 interface ReportViewGeneratorInterface
