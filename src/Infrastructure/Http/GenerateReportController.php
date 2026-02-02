@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Http;
 
-use App\Application\Report\UseCase\GenerateReportRequest;
+use App\Application\Report\DTO\GenerateReportRequest;
 use App\Application\Report\UseCase\GenerateReportUseCase;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

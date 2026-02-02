@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Domain\Report\Entity;
 
 
+use DateTimeImmutable;
+
 class Report
 {
     private ?int $id = null;
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     public function __construct(
         private string $filePath,
     ) {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getFilePath(): ?string
@@ -26,7 +28,7 @@ class Report
         return $this->id;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }

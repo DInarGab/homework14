@@ -9,7 +9,6 @@ use App\Domain\ValueObject\Url;
 
 class News
 {
-
     private ?int $id = null;
 
     private Title $title;

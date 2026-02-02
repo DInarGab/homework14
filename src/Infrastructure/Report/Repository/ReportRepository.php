@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Report\Repository;
@@ -7,9 +8,6 @@ use App\Domain\Report\Entity\Report;
 use App\Domain\Report\Repository\ReportRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Filesystem\Filesystem;
-use ReflectionClass;
 
 class ReportRepository extends ServiceEntityRepository implements ReportRepositoryInterface
 {
@@ -24,8 +22,8 @@ class ReportRepository extends ServiceEntityRepository implements ReportReposito
         $this->getEntityManager()->flush();
     }
 
-    public function getReport(int $id): Report
+    public function getReport(int $id): ?Report
     {
-        return $this->findBy(['id' => $id]);
+        return $this->findOneBy(['id' => $id]);
     }
 }

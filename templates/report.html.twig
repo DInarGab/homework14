@@ -9,7 +9,7 @@
 
 <ul>
     {% for newsItem in news  %}
-        <li><a href="{{ newsItem.url.value }}" target="_blank">{{ newsItem.title.value }}</a></li>
+        <li><a href="{{ newsItem.url }}" target="_blank">{{ newsItem.title }}</a></li>
     {% endfor %}
 </ul>
 </body>

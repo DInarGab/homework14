@@ -9,6 +9,6 @@ interface ReportRepositoryInterface
 {
     public function save(Report $report): void;
 
-    public function getReport(int $id): Report;
+    public function getReport(int $id): ?Report;
 
 }

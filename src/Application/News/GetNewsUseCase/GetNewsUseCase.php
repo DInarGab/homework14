@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Application\News\GetNewsUseCase;
 
+use App\Application\News\DTO\GetNewsResponse;
 use App\Infrastructure\News\Repository\NewsRepository;
 
 class GetNewsUseCase

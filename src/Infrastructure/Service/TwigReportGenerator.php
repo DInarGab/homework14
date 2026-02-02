@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Service;
 
+use App\Application\News\DTO\NewsDTO;
 use App\Application\Report\Service\ReportViewGeneratorInterface;
 use Twig\Environment;
 
@@ -15,6 +16,11 @@ class TwigReportGenerator implements ReportViewGeneratorInterface
 
     }
 
+    /**
+     * @param array<NewsDTO> $news
+     *
+     * @return string generated html string
+     */
     public function generate(array $news): string
     {
         return $this->twig->render("report.html.twig", ["news" => $news]);

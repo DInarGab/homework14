@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\Report\UseCase;
+namespace App\Application\Report\DTO;
 
 class GenerateReportRequest
 {

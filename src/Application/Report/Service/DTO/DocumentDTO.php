@@ -9,8 +9,6 @@ class DocumentDTO
     public function __construct(
         public string $title,
         public string $content,
-    )
-    {
-
+    ) {
     }
 }

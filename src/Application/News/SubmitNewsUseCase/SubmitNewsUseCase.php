@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Application\News\SubmitNewsUseCase;
 
 
+use App\Application\News\DTO\SubmitNewsRequest;
+use App\Application\News\DTO\SubmitNewsResponse;
 use App\Application\News\Service\DocumentLoaderInterface;
 use App\Domain\News\Factory\NewsFactoryInterface;
 use App\Domain\News\Repository\NewsRepositoryInterface;
